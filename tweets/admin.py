@@ -8,7 +8,8 @@ class TweetAdmin(admin.ModelAdmin):
         "id",
         "payload",
         "created_at",
-        "updated_at"
+        "updated_at",
+        "total_likes",
     )
     
     list_filter = (

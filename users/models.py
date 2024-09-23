@@ -16,3 +16,9 @@ class User(AbstractUser):
         default="",
     )
     avatar = models.ImageField(blank=True)
+
+    def total_tweets(self):
+        return self.tweets.count()
+
+    def total_likes(self):
+        return self.likes.count()
