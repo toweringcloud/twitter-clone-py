@@ -17,7 +17,9 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from tweets import views
 
 urlpatterns = [
+    path("", views.read_tweets),
     path("admin/", admin.site.urls),
 ]
