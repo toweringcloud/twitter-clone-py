@@ -50,16 +50,16 @@ class TweetAdmin(admin.ModelAdmin):
 class LikeAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "tweet",
         "user",
         "created_at",
         "updated_at",
     )
 
     list_filter = (
+        "id",
         "created_at",
         "updated_at",
     )
 
-    search_fields = (
-        "user__username",
-    )
+    search_fields = ("user__username",)

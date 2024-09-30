@@ -8,6 +8,7 @@ from .serializers import UserSerializer
 
 
 class Users(APIView):
+    # GET /api/v1/users
     def get(self, request):
         all_users = User.objects.all()
         serializer = UserSerializer(all_users, many=True)
@@ -15,21 +16,23 @@ class Users(APIView):
 
 
 class UserDetail(APIView):
-    def get_object(self, user_id):
+    def get_object(self, pk):
         try:
-            return User.objects.get(pk=user_id)
+            return User.objects.get(pk=pk)
         except User.DoesNotExist:
             raise NotFound
 
-    def get(self, request, user_id):
-        serializer = UserSerializer(self.get_object(user_id))
+    # GET /api/v1/users/<int:pk>
+    def get(self, request, pk):
+        serializer = UserSerializer(self.get_object(pk))
         return Response(serializer.data)
 
 
 class UserTweets(APIView):
-    def get(self, request, user_id):
+    # GET /api/v1/users/<int:pk>/tweets
+    def get(self, request, pk):
         try:
-            user = User.objects.get(pk=user_id)
+            user = User.objects.get(pk=pk)
             serializer = TweetSerializer(user.tweets, many=True)
             return Response(serializer.data)
         except User.DoesNotExist:

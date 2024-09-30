@@ -13,9 +13,14 @@ class User(AbstractUser):
     )
     name = models.CharField(
         max_length=150,
-        default="",
+        blank=True,
     )
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.username
 
     def total_tweets(self):
         return self.tweets.count()

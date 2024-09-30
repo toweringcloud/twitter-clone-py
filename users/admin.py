@@ -41,4 +41,10 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
-    list_display = ("username", "email", "name", "total_tweets", "total_likes")
+    list_display = (
+        "username",
+        "email",
+        "name",
+        "total_tweets",
+        "total_likes",
+    )

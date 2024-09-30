@@ -7,12 +7,14 @@ from .serializers import TweetSerializer
 
 
 class Tweets(APIView):
+    # GET /api/v1/tweets
     def get(self, request):
         all_tweets = Tweet.objects.all()
         serializer = TweetSerializer(all_tweets, many=True)
         return Response(serializer.data)
 
-    def post(self, request, pk):
+    # POST /api/v1/tweets
+    def post(self, request):
         serializer = TweetSerializer(data=request.data)
         if serializer.is_valid():
             new_tweet = serializer.save()
@@ -30,10 +32,12 @@ class TweetDetail(APIView):
         except Tweet.DoesNotExist:
             raise NotFound
 
+    # GET /api/v1/tweets/<int:pk>
     def get(self, request, pk):
         serializer = TweetSerializer(self.get_object(pk))
         return Response(serializer.data)
 
+    # PUT /api/v1/tweets/<int:pk>
     def put(self, request, pk):
         serializer = TweetSerializer(
             self.get_object(pk),
@@ -41,13 +45,14 @@ class TweetDetail(APIView):
             partial=True,
         )
         if serializer.is_valid():
-            upodated_tweet = serializer.save()
+            updated_tweet = serializer.save()
             return Response(
                 TweetSerializer(updated_tweet).data,
             )
         else:
             return Response(serializer.errors)
 
+    # DELETE /api/v1/tweets/<int:pk>
     def delete(self, request, pk):
         self.get_object(pk).delete()
         return Response(status=HTTP_204_NO_CONTENT)
