@@ -1,4 +1,7 @@
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import (
+    NotFound,
+    NotAuthenticated,
+)
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
@@ -15,14 +18,17 @@ class Tweets(APIView):
 
     # POST /api/v1/tweets
     def post(self, request):
-        serializer = TweetSerializer(data=request.data)
-        if serializer.is_valid():
-            new_tweet = serializer.save()
-            return Response(
-                TweetSerializer(new_tweet).data,
-            )
+        if request.user.is_authenticated:
+            serializer = TweetSerializer(data=request.data)
+            if serializer.is_valid():
+                new_tweet = serializer.save(user=request.user)
+                return Response(
+                    TweetSerializer(new_tweet).data,
+                )
+            else:
+                return Response(serializer.errors)
         else:
-            return Response(serializer.errors)
+            raise NotAuthenticated
 
 
 class TweetDetail(APIView):
@@ -34,11 +40,18 @@ class TweetDetail(APIView):
 
     # GET /api/v1/tweets/<int:pk>
     def get(self, request, pk):
-        serializer = TweetSerializer(self.get_object(pk))
+        tweet = self.get_object(pk)
+        serializer = TweetSerializer(tweet)
         return Response(serializer.data)
 
     # PUT /api/v1/tweets/<int:pk>
     def put(self, request, pk):
+        tweet = self.get_object(pk)
+        if not request.user.is_authenticated:
+            raise NotAuthenticated
+        if tweet.user != request.user:
+            raise PermissionDenied
+
         serializer = TweetSerializer(
             self.get_object(pk),
             data=request.data,
@@ -54,5 +67,11 @@ class TweetDetail(APIView):
 
     # DELETE /api/v1/tweets/<int:pk>
     def delete(self, request, pk):
-        self.get_object(pk).delete()
+        tweet = self.get_object(pk)
+        if not request.user.is_authenticated:
+            raise NotAuthenticated
+        if tweet.user != request.user:
+            raise PermissionDenied
+
+        tweet.delete()
         return Response(status=HTTP_204_NO_CONTENT)
