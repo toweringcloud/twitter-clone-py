@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 
 
-# GET /api/v1/users
-# GET /api/v1/users/<int:pk>
-# GET /api/v1/users/<int:pk>/tweets
 urlpatterns = [
     path("", views.Users.as_view()),
-    path("<int:pk>", views.UserDetail.as_view()),
-    path("<int:pk>/tweets", views.UserTweets.as_view()),
+    path("login", views.LogIn.as_view()),
+    path("logout", views.LogOut.as_view()),
+    path("me", views.Me.as_view()),
+    path("password", views.ChangePassword.as_view()),
+    path("@<str:username>", views.UserDetail.as_view()),
 ]

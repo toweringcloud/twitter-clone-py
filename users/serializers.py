@@ -12,7 +12,17 @@ class TinyUserSerializer(ModelSerializer):
         )
 
 
-class UserSerializer(ModelSerializer):
+class PrivateUserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        exclude = (
+            "password",
+            "is_superuser",
+            "id",
+            "is_staff",
+            "is_active",
+            "first_name",
+            "last_name",
+            "groups",
+            "user_permissions",
+        )
