@@ -9,4 +9,5 @@ urlpatterns = [
     path("me", views.Me.as_view()),
     path("password", views.ChangePassword.as_view()),
     path("@<str:username>", views.UserDetail.as_view()),
+    path("<int:pk>/tweets", views.UserTweets.as_view()),
 ]
